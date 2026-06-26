@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integración E-Commerce · Business Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:       #0A2463;
+    --navy-mid:   #0D2F7A;
+    --blue:       #1757C2;
+    --blue-light: #3A86FF;
+    --blue-pale:  #EBF1FF;
+    --blue-mist:  #F0F4FF;
+    --accent:     #00B4D8;
+    --white:      #FFFFFF;
+    --text-main:  #0A1A3D;
+    --text-muted: #5A6E9A;
+    --border:     #D2DFFF;
+    --card-bg:    #FFFFFF;
+    --font-display: 'Barlow Condensed', 'Aptos Narrow', Arial Narrow, sans-serif;
+    --font-body:    'Barlow', 'Aptos', Arial, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--blue-mist);
+    color: var(--text-main);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, #0D3580 60%, #1042A0 100%);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(10,36,99,0.35);
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .logo-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .bi-icon {
+    width: 38px;
+    height: 38px;
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .bi-icon svg { width: 22px; height: 22px; }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .logo-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .logo-sub {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .header-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+
+  .badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+
+  .badge-text {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, #0A2463 0%, #0D3280 40%, #0F3D9E 100%);
+    padding: 52px 2rem 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(58,134,255,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 80% 30%, rgba(0,180,216,0.08) 0%, transparent 40%);
+  }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(58,134,255,0.18);
+    border: 1px solid rgba(58,134,255,0.35);
+    border-radius: 4px;
+    padding: 4px 12px;
+    margin-bottom: 18px;
+  }
+
+  .hero-eyebrow span {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 600;
+    color: #90bcff;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-desc {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.65);
+    max-width: 560px;
+    line-height: 1.65;
+    margin-bottom: 32px;
+  }
+
+  /* stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .stat-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.12);
+    align-self: stretch;
+  }
+
+  /* data bars decoration */
+  .hero-bars {
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 80px;
+    opacity: 0.18;
+  }
+
+  .hero-bar {
+    width: 8px;
+    border-radius: 3px 3px 0 0;
+    background: #fff;
+    animation: barGrow 1.4s ease-out both;
+  }
+
+  @keyframes barGrow {
+    from { transform: scaleY(0); transform-origin: bottom; }
+    to   { transform: scaleY(1); transform-origin: bottom; }
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 2rem 4rem;
+  }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .view-switcher {
+    display: flex;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(10,36,99,0.06);
+  }
+
+  .switch-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-right: 1px solid var(--border);
+  }
+
+  .switch-btn:last-child { border-right: none; }
+
+  .switch-btn.active {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+
+  .switch-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  .search-wrap {
+    flex: 1;
+    min-width: 220px;
+    position: relative;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+  }
+
+  .search-input {
+    width: 100%;
+    height: 44px;
+    padding: 0 16px 0 42px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text-main);
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+    box-shadow: 0 1px 4px rgba(10,36,99,0.06);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .search-input::placeholder { color: var(--text-muted); }
+  .search-input:focus { border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(58,134,255,0.12); }
+
+  /* ── VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── PLATFORM CARDS ── */
+  .platform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .platform-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(10,36,99,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .platform-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(10,36,99,0.11);
+  }
+
+  .platform-head {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .logo-wrap img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+  }
+
+  .platform-info { flex: 1; }
+
+  .platform-name {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .platform-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .company-list { padding: 6px 0; }
+
+  .company-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 20px;
+    border-bottom: 1px solid rgba(210,223,255,0.45);
+    transition: background 0.15s;
+  }
+
+  .company-row:last-child { border-bottom: none; }
+  .company-row:hover { background: var(--blue-pale); }
+
+  .company-name {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-main);
+    flex: 1;
+    min-width: 0;
+  }
+
+  .store-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--blue-pale);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 11px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--blue);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .store-pill::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--blue-light);
+    flex-shrink: 0;
+  }
+
+  /* ── COMPANY VIEW ── */
+  .company-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .company-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(10,36,99,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .company-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(10,36,99,0.11);
+  }
+
+  .company-head {
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #F5F8FF 0%, #EBF1FF 100%);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .company-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--blue) 0%, var(--navy) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .company-head-info { flex: 1; }
+
+  .company-head-name {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .company-platforms-count {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .ec-rows { padding: 6px 0; }
+
+  .ec-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    border-bottom: 1px solid rgba(210,223,255,0.45);
+    transition: background 0.15s;
+  }
+
+  .ec-row:last-child { border-bottom: none; }
+  .ec-row:hover { background: var(--blue-pale); }
+
+  .ec-logo-sm {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .ec-logo-sm img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+  }
+
+  .ec-name {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    min-width: 100px;
+  }
+
+  .ec-store {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: auto;
+    background: var(--blue-pale);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2px 10px;
+    white-space: nowrap;
+  }
+
+  /* ── EMPTY ── */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+    grid-column: 1 / -1;
+  }
+
+  .empty-state svg { width: 40px; height: 40px; margin-bottom: 12px; opacity: 0.4; }
+  .empty-state p { font-size: 14px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    padding: 20px 2rem;
+    text-align: center;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .footer-text {
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .footer-tag {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 4px 12px;
+  }
+
+  .footer-tag-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .footer-tag span {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .hero-bars { display: none; }
+    .stats-bar { gap: 18px; }
+    .platform-grid, .company-grid { grid-template-columns: 1fr; }
+    .header-badge { display: none; }
+    .controls { flex-direction: column; align-items: stretch; }
+    .view-switcher { width: 100%; }
+    .switch-btn { flex: 1; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-group">
+      <div class="bi-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="12" width="4" height="9" rx="1" fill="rgba(255,255,255,0.9)"/>
+          <rect x="10" y="7" width="4" height="14" rx="1" fill="rgba(255,255,255,0.9)"/>
+          <rect x="17" y="3" width="4" height="18" rx="1" fill="rgba(255,255,255,0.9)"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <div class="logo-title">Business Intelligence</div>
+        <div class="logo-sub">Integración E-Commerce</div>
+      </div>
+    </div>
+    <div class="header-badge">
+      <div class="badge-dot"></div>
+      <div class="badge-text">Datos actualizados</div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+        <circle cx="5" cy="5" r="5" fill="#00B4D8"/>
+      </svg>
+      <span>Área de Business Intelligence</span>
+    </div>
+    <h1 class="hero-title">Mapa de integración<br><em>E-Commerce</em></h1>
+    <p class="hero-desc">
+      Visualización centralizada de las empresas que operan en cada plataforma de comercio electrónico, con sus tiendas online registradas.
+    </p>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-num" id="stat-ec">6</span>
+        <span class="stat-label">Plataformas</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num" id="stat-companies">11</span>
+        <span class="stat-label">Razones sociales</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num" id="stat-stores">19</span>
+        <span class="stat-label">Registros totales</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-bars" aria-hidden="true">
+    <div class="hero-bar" style="height:30%;animation-delay:0s"></div>
+    <div class="hero-bar" style="height:55%;animation-delay:.08s"></div>
+    <div class="hero-bar" style="height:80%;animation-delay:.16s"></div>
+    <div class="hero-bar" style="height:45%;animation-delay:.24s"></div>
+    <div class="hero-bar" style="height:95%;animation-delay:.32s"></div>
+    <div class="hero-bar" style="height:65%;animation-delay:.40s"></div>
+    <div class="hero-bar" style="height:40%;animation-delay:.48s"></div>
+    <div class="hero-bar" style="height:75%;animation-delay:.56s"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <div class="controls">
+    <div class="view-switcher" role="tablist">
+      <button class="switch-btn active" id="btn-platform" role="tab" aria-selected="true" onclick="switchView('platform')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        Por e-commerce
+      </button>
+      <button class="switch-btn" id="btn-company" role="tab" aria-selected="false" onclick="switchView('company')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Por compañía
+      </button>
+    </div>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input class="search-input" type="text" id="search" placeholder="Buscar empresa, tienda o plataforma…" oninput="handleSearch(this.value)" aria-label="Buscar">
+    </div>
+  </div>
+
+  <!-- VIEW: PLATFORM -->
+  <div class="view active" id="view-platform" role="tabpanel">
+    <div class="platform-grid" id="platform-grid"></div>
+  </div>
+
+  <!-- VIEW: COMPANY -->
+  <div class="view" id="view-company" role="tabpanel">
+    <div class="company-grid" id="company-grid"></div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-text">© 2025 Business Intelligence · Datos de integración E-Commerce</div>
+    <div class="footer-tag">
+      <div class="footer-tag-dot"></div>
+      <span>Fuente: Business Intelligence</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const LOGOS = {
+  "Mercado Libre": "https://http2.mlstatic.com/frontend-assets/ml-web-navigation/ui-navigation/6.6.92/mercadolibre/logo__large_plus@2x.png",
+  "Amazon":        "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/320px-Amazon_logo.svg.png",
+  "Walmart":       "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Walmart_Spark.svg/160px-Walmart_Spark.svg.png",
+  "Coppel":        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Coppel_logo.svg/320px-Coppel_logo.svg.png",
+  "Liverpool":     "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Liverpool_department_stores_logo.svg/320px-Liverpool_department_stores_logo.svg.png",
+  "Tik Top Shop":  "https://sf16-website-login.neutral.ttwstatic.com/obj/tiktok_web_login_static/tiktok/webapp/main/webapp-desktop/8152cef44549.png"
+};
+
+const LOGO_FALLBACK = {
+  "Mercado Libre": "ML",
+  "Amazon":        "AMZ",
+  "Walmart":       "WMT",
+  "Coppel":        "CPL",
+  "Liverpool":     "LVP",
+  "Tik Top Shop":  "TTS"
+};
+
+const PLATFORMS = [
+  { name: "Mercado Libre", companies: [
+    { razon: "Aleagarat", tienda: "OCENID" },
+    { razon: "Bloom & Blush", tienda: "Nexu store" },
+    { razon: "Enfermeras Unidas Plus", tienda: "Medical store" },
+    { razon: "Comercializadora de Marcas JSB", tienda: "Selectshop" },
+    { razon: "Comercializadora Online NH", tienda: "SIGNA" },
+    { razon: "BH Solar", tienda: "T-LAB" },
+    { razon: "Donkertech", tienda: "Fontastic" }
+  ]},
+  { name: "Amazon", companies: [
+    { razon: "Bloom & Blush", tienda: "Nexu store" },
+    { razon: "Selectshop MB", tienda: "Selectshop" },
+    { razon: "BH Solar", tienda: "T-LAB" },
+    { razon: "Zona Zelu", tienda: "Fontastic" }
+  ]},
+  { name: "Walmart", companies: [
+    { razon: "Comercializadora de Marcas JSB", tienda: "Selectshop" },
+    { razon: "Bloom & Blush", tienda: "Nexu store" },
+    { razon: "Aleagarat", tienda: "Armaf" },
+    { razon: "BH Solar", tienda: "T-LAB" }
+  ]},
+  { name: "Coppel", companies: [
+    { razon: "Comercializadora Online NH", tienda: "SIGNA" },
+    { razon: "Donkertech", tienda: "Fontastic" }
+  ]},
+  { name: "Liverpool", companies: [
+    { razon: "Comercializadora Online NH", tienda: "SIGNA" },
+    { razon: "Donkertech", tienda: "Fontastic" }
+  ]},
+  { name: "Tik Top Shop", companies: [
+    { razon: "BH Be Healthy", tienda: "Selectshop" },
+    { razon: "Donkertech", tienda: "Fontastic" }
+  ]}
+];
+
+function buildCompanyMap() {
+  const map = {};
+  PLATFORMS.forEach(p => {
+    p.companies.forEach(c => {
+      if (!map[c.razon]) map[c.razon] = [];
+      map[c.razon].push({ ec: p.name, tienda: c.tienda });
+    });
+  });
+  return map;
+}
+
+function logoImg(platform, size) {
+  const s = size || 36;
+  const fb = LOGO_FALLBACK[platform] || platform.slice(0,3).toUpperCase();
+  return `<img src="${LOGOS[platform]}" alt="${platform} logo" width="${s}" height="${s}"
+    style="width:${s}px;height:${s}px;object-fit:contain;"
+    onerror="this.outerHTML='<span style=\\'font-family:var(--font-display);font-size:10px;font-weight:700;color:var(--blue);\\'>'+\\'${fb}\\'+\\'</span>'"
+  >`;
+}
+
+function renderPlatform(query) {
+  const q = (query || '').toLowerCase().trim();
+  const grid = document.getElementById('platform-grid');
+  let html = '';
+  let visibleCount = 0;
+
+  PLATFORMS.forEach(p => {
+    const filtered = p.companies.filter(c =>
+      !q ||
+      c.razon.toLowerCase().includes(q) ||
+      c.tienda.toLowerCase().includes(q) ||
+      p.name.toLowerCase().includes(q)
+    );
+    if (!filtered.length) return;
+    visibleCount++;
+
+    html += `<div class="platform-card">
+      <div class="platform-head">
+        <div class="logo-wrap">${logoImg(p.name, 36)}</div>
+        <div class="platform-info">
+          <div class="platform-name">${p.name}</div>
+          <div class="platform-count">${filtered.length} empresa${filtered.length !== 1 ? 's' : ''} registrada${filtered.length !== 1 ? 's' : ''}</div>
+        </div>
+      </div>
+      <div class="company-list">`;
+
+    filtered.forEach(c => {
+      html += `<div class="company-row">
+        <span class="company-name">${c.razon}</span>
+        <span class="store-pill">${c.tienda}</span>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  if (!visibleCount) {
+    html = `<div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <p>No se encontraron resultados para "<strong>${query}</strong>"</p>
+    </div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function renderCompany(query) {
+  const q = (query || '').toLowerCase().trim();
+  const map = buildCompanyMap();
+  const grid = document.getElementById('company-grid');
+  let html = '';
+  let visibleCount = 0;
+
+  Object.keys(map).sort().forEach(razon => {
+    const entries = map[razon];
+    const filtered = entries.filter(e =>
+      !q ||
+      razon.toLowerCase().includes(q) ||
+      e.ec.toLowerCase().includes(q) ||
+      e.tienda.toLowerCase().includes(q)
+    );
+    if (!filtered.length) return;
+    visibleCount++;
+
+    const initials = razon.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+
+    html += `<div class="company-card">
+      <div class="company-head">
+        <div class="company-avatar">${initials}</div>
+        <div class="company-head-info">
+          <div class="company-head-name">${razon}</div>
+          <div class="company-platforms-count">Presente en ${filtered.length} plataforma${filtered.length !== 1 ? 's' : ''}</div>
+        </div>
+      </div>
+      <div class="ec-rows">`;
+
+    filtered.forEach(e => {
+      html += `<div class="ec-row">
+        <div class="ec-logo-sm">${logoImg(e.ec, 22)}</div>
+        <span class="ec-name">${e.ec}</span>
+        <span class="ec-store">${e.tienda}</span>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  if (!visibleCount) {
+    html = `<div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <p>No se encontraron resultados para "<strong>${query}</strong>"</p>
+    </div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+let currentView = 'platform';
+
+function switchView(view) {
+  currentView = view;
+  document.getElementById('view-platform').classList.toggle('active', view === 'platform');
+  document.getElementById('view-company').classList.toggle('active', view === 'company');
+  document.getElementById('btn-platform').classList.toggle('active', view === 'platform');
+  document.getElementById('btn-platform').setAttribute('aria-selected', view === 'platform');
+  document.getElementById('btn-company').classList.toggle('active', view === 'company');
+  document.getElementById('btn-company').setAttribute('aria-selected', view === 'company');
+  const q = document.getElementById('search').value;
+  if (view === 'platform') renderPlatform(q);
+  else renderCompany(q);
+}
+
+function handleSearch(val) {
+  if (currentView === 'platform') renderPlatform(val);
+  else renderCompany(val);
+}
+
+renderPlatform('');
+renderCompany('');
+</script>
+</body>
+</html>
